@@ -77,11 +77,13 @@ app.get('/articles', (req, res) => {
 });
 
 app.get("/articles/:id", (req, res) => {
+	console.log(req.params.id, "this is our param id");
 	Article.findOne({
-			id: req.params.id
+			_id: req.params.id
 		})
-		.populate("comments")
+		.populate("comment")
 		.then(function (Article) {
+			console.log(Article, 'this is our article data')
 			res.json(Article);
 		})
 		.catch((err) => {
@@ -91,6 +93,7 @@ app.get("/articles/:id", (req, res) => {
 
 app.post("/comments/:id", (req, res) => {
 	var newComment = new Comment(req.body);
+	console.log(req.params.id, "this is our param id");
 	newComment.save((error, comment) => {
 		if (error) {
 			console.log(error);
@@ -108,7 +111,7 @@ app.post("/comments/:id", (req, res) => {
 				if (err) {
 					console.log(err);
 				} else {
-					res.redirect(`/comments/${req.params.id}`);
+					res.render(`index`);
 				}
 			});
 		}
