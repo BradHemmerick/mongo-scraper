@@ -1,5 +1,9 @@
-#scrape {
+#scrape, #saved, #home {
     border-radius: 50%;
     background-color: black;
     color: antiquewhite
+}
+
+.article.selected {
+    background: lime;
 }

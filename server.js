@@ -66,8 +66,18 @@ app.get('/scrape', (req, res) => {
 	res.redirect("/");
 })
 
+app.get('/saved', (req,res) => {
+	res.render('saved')
+})
+
 app.get('/articles', (req, res) => {
-	Article.find({}, (err, result) => {
+	var query = {}
+
+	if (req.query.saved) {
+		query.saved = true
+	}
+	
+	Article.find(query, (err, result) => {
 		if (err) {
 			console.log(err);
 		} else {
@@ -77,13 +87,13 @@ app.get('/articles', (req, res) => {
 });
 
 app.get("/articles/:id", (req, res) => {
-	console.log(req.params.id, "this is our param id");
+	// console.log(req.params.id, "this is our param id");
 	Article.findOne({
 			_id: req.params.id
 		})
 		.populate("comment")
-		.then(function (Article) {
-			console.log(Article, 'this is our article data')
+		.then((Article) => {
+			// console.log(Article, 'this is our article data')
 			res.json(Article);
 		})
 		.catch((err) => {
@@ -93,7 +103,7 @@ app.get("/articles/:id", (req, res) => {
 
 app.post("/comments/:id", (req, res) => {
 	var newComment = new Comment(req.body);
-	console.log(req.params.id, "this is our param id");
+	// console.log(req.params.id, "this is our param id");
 	newComment.save((error, comment) => {
 		if (error) {
 			console.log(error);
@@ -117,7 +127,24 @@ app.post("/comments/:id", (req, res) => {
 		}
 	});
 });
+app.post("/articles/:id/toggle-save", (req, res, next) => {
+	Article.findOne({
+		"_id": req.params.id
+	}, (err, article) => {
+		if (err) { return next(err) }
+		// If saved is true, then saved will be false
+		// if saved is false, then it will be true
+		// a = true
+		// a = !a
+		// a => false
+		article.set("saved", !article.get("saved"))
 
+		article.save((err) => {
+			if (err) { return next(err) }
+			res.json({ succes: true })
+		})
+	})
+})
 app.get("/comments/:id", (req, res) => {
 	console.log("This is the req.params: " + req.params.id);
 	Article.find({
@@ -129,9 +156,10 @@ app.get("/comments/:id", (req, res) => {
 			} else {
 				var commentObj = {
 					Article: comment
-				};
+				}
+				res.send(comment)
 				console.log(commentObj);
-				res.render("comments", commentObj);
+				res.render("index", commentObj);
 			}
 		});
 });
