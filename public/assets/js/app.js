@@ -21,7 +21,7 @@ if (location.pathname === "/saved") {
   });
 }
 
-
+//if the function here is an arrrow function the keyword this becomes the window
 $(document).on("click", ".article", function () {
   // Remove the selected class
   $(".article").removeClass("selected")
@@ -38,8 +38,8 @@ $(document).on("click", ".article", function () {
     .then( function(data) {
       console.log(data);
       $("#commentHere").append(`<h2>${data.title}</h2>`);
-      $("#commentHere").append("<input id='username' name='username' placeholder='Your name...' >");
-      $("#commentHere").append("<textarea id='commentBody' name='body' placeholder='Your comment...' ></textarea>");
+      $("#commentHere").append("<input id='username' name='username' class='form-control' placeholder='Your name...' >");
+      $("#commentHere").append("<textarea id='commentBody' class='form-control' name='body' placeholder='Your comment...' ></textarea>");
       $("#commentHere").append(`<button data-id='${data._id}' id='postComment'> Save Comment </button>`);
       $("#commentHere").append(`<hr/>`);
       $("#commentHere").append(data.comment.reverse().map(function (currentComment) {
@@ -47,16 +47,12 @@ $(document).on("click", ".article", function () {
           $comment.append([
             $("<strong>", { text: currentComment.username }),
             $("<p>", { text: currentComment.comment }),
-            $('<button class=delete> Delete </button>')
           ])
           return $comment;
       }))
     })
 });
 
-$(document).on('click', '.delete', function() {
-  
-})
 
 $(document).on('click', '#postComment', function(){
   var username = $('#username').val()
@@ -79,7 +75,7 @@ $(document).on('click', '#postComment', function(){
   var $btn = $(this)
   $.post(`/articles/${articleId}/toggle-save`).then(function () {
     $btn.text($btn.text().trim() === "Save" ? "Saved" : "Save")
-  })
+  }).then(location.reload())
   return false;
  })
 

@@ -132,11 +132,6 @@ app.post("/articles/:id/toggle-save", (req, res, next) => {
 		"_id": req.params.id
 	}, (err, article) => {
 		if (err) { return next(err) }
-		// If saved is true, then saved will be false
-		// if saved is false, then it will be true
-		// a = true
-		// a = !a
-		// a => false
 		article.set("saved", !article.get("saved"))
 
 		article.save((err) => {

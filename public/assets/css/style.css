@@ -1,9 +1,13 @@
-#scrape, #saved, #home {
+#scrape, #saved, #home, #postComment, .saveBtn  {
     border-radius: 50%;
     background-color: black;
     color: antiquewhite
 }
 
 .article.selected {
-    background: lime;
+    background: lightcoral;
+}
+
+#move {
+    margin-left: 190px;
 }
