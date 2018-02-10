@@ -9,7 +9,7 @@ const db = mongoose.connection
 
 mongoose.Promise = Promise;
 
-var uristring = process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/mongo-scrape';
+var uristring = process.env.MONGODB_URI || 'mongodb://localhost/mongo-scrape';
 
 mongoose.connect(uristring)
 
